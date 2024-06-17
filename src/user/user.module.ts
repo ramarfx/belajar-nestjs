@@ -8,15 +8,11 @@ import {
   createConnection,
 } from './connection/connection';
 import { MailService, mailService } from './mail/mail.service';
-import {
-  UserRespository,
-} from './user-respository/user-respository';
+import { UserRespository } from './user-respository/user-respository';
 import { MemberService } from './member/member.service';
 import { ConfigService } from '@nestjs/config';
-import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  imports: [PrismaModule],
   controllers: [UserController],
   providers: [
     UserService,
@@ -36,6 +32,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
     UserRespository,
     MemberService,
   ],
-  exports: [UserService]
+  exports: [UserService],
 })
 export class UserModule {}
