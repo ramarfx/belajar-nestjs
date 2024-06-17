@@ -5,21 +5,25 @@ import {
   Connection,
   MongoDBConnection,
   MySQLConnection,
+  createConnection,
 } from './connection/connection';
 import { MailService, mailService } from './mail/mail.service';
 import {
   UserRespository,
-  createUserRepository,
 } from './user-respository/user-respository';
+import { MemberService } from './member/member.service';
+import { ConfigService } from '@nestjs/config';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
+  imports: [PrismaModule],
   controllers: [UserController],
   providers: [
     UserService,
     {
       provide: Connection,
-      useClass:
-        process.env.DATABASE == 'mysql' ? MySQLConnection : MongoDBConnection,
+      useFactory: createConnection,
+      inject: [ConfigService],
     },
     {
       provide: MailService,
@@ -29,11 +33,9 @@ import {
       provide: 'EmailService',
       useExisting: MailService,
     },
-    {
-      provide: UserRespository,
-      useFactory: createUserRepository,
-      inject: [Connection],
-    },
+    UserRespository,
+    MemberService,
   ],
+  exports: [UserService]
 })
 export class UserModule {}
